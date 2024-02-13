@@ -1,0 +1,90 @@
+﻿@using GymLog.Web.Exercises.Dtos
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            ID:
+        </div>
+    </div>
+    <div class="row lead fw-bold">
+        <div class="col-12">
+            @Exercise.Id
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-12">
+            Name:
+        </div>
+    </div>
+    <div class="row lead fw-bold">
+        <div class="col-12">
+            @Exercise.Name
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            Category
+        </div>
+    </div>
+    <div class="row lead fw-bold">
+        <div class="col-12">
+            @Exercise.Category
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            Workouts
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-12">
+            <ul class="list-group">
+                @if (!Exercise.Workouts.Any())
+                {
+                    <li class="list-group-item list-group-item-danger">No workouts found</li>
+                }
+                else
+                {
+                    @foreach (ExerciseWorkoutDto workout in Exercise.Workouts)
+                    {
+                        <li class="list-group-item">
+                            <span>@workout.Duration</span> |
+                            <span>@workout.DateTime</span> |
+                            <span>Sets: @workout.Sets</span> |
+                            <span>Reps: @workout.Reps</span>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary" @onclick="CloseAsync">Close</button>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter] public ExerciseDto Exercise { get; set; } = default!;
+
+    [CascadingParameter] public BlazoredModalInstance BlazoredModalInstance { get; set; } = default!;
+
+    private async Task CloseAsync()
+    {
+        await BlazoredModalInstance.CloseAsync(ModalResult.Cancel());
+    }
+
+}

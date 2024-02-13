@@ -1,0 +1,165 @@
+﻿@page "/workouts"
+@using GymLog.Web.Workouts.Dtos
+@using GymLog.Web.Workouts.Requests
+@using GymLog.Web.Workouts.Services
+
+<PageTitle>GymLog - Workouts</PageTitle>
+
+<div class="d-flex justify-content-between mb-3">
+    <h1 class="m-0">Workouts</h1>
+    <button type="button" class="btn btn-success" @onclick="ShowCreateModalAsync">Create workout</button>
+</div>
+
+@if (!_workouts.Any())
+{
+    <div class="alert alert-danger text-center" role="alert">
+        No workouts found
+    </div>
+}
+else
+{
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Duration</th>
+            <th>Date</th>
+            <th>Sets and reps</th>
+            <th style="width: 10rem;"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (WorkoutDto workout in _workouts)
+        {
+            <tr>
+                <td>@workout.Id</td>
+                <td>@workout.Duration</td>
+                <td>@workout.DateTime</td>
+                <td>@workout.Sets x @workout.Reps</td>
+                <td style="width: 10rem;" class="justify-content-between d-flex">
+                    <button type="button" class="btn btn-primary" @onclick="() => ShowDetailsModal(workout)">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </button>
+                    <button type="button" class="btn btn-secondary" @onclick="() => ShowUpdateModalAsync(workout)">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button type="button" class="btn btn-danger" @onclick="() => ShowDeleteModalAsync(workout.Id, workout.DateTime)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    [Inject] public IWorkoutService WorkoutService { get; set; } = default!;
+
+    [Inject] public IToastService ToastService { get; set; } = default!;
+
+    [CascadingParameter] public IModalService ModalService { get; set; } = default!;
+
+    private IEnumerable<WorkoutDto> _workouts = new List<WorkoutDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetWorkoutsAsync();
+    }
+
+    private async Task GetWorkoutsAsync()
+    {
+        try
+        {
+            _workouts = await WorkoutService.GetWorkoutsAsync();
+        }
+        catch (Exception e)
+        {
+            ToastService.ShowError($"Error getting workouts - {e.Message}");
+        }
+    }
+
+    private async Task ShowCreateModalAsync()
+    {
+        IModalReference modalReference = ModalService.Show<WorkoutCreateModal>("Create workout");
+
+        ModalResult modalResult = await modalReference.Result;
+
+        if (modalResult.Confirmed)
+        {
+            try
+            {
+                CreateWorkoutRequest request = (CreateWorkoutRequest)modalResult.Data!;
+
+                await WorkoutService.CreateWorkoutAsync(request);
+
+                await GetWorkoutsAsync();
+
+                ToastService.ShowInfo("Workout created");
+            }
+            catch (Exception e)
+            {
+                ToastService.ShowError($"Error creating workout - {e.Message}");
+            }
+        }
+    }
+
+    private void ShowDetailsModal(WorkoutDto workout)
+    {
+        ModalService.Show<WorkoutDetailsModal>("Workout details",
+            new ModalParameters().Add("Workout", workout),
+            new ModalOptions { Size = ModalSize.Large });
+    }
+
+    private async Task ShowUpdateModalAsync(WorkoutDto workout)
+    {
+        IModalReference modalReference = ModalService.Show<WorkoutUpdateModal>("Update workout",
+            new ModalParameters().Add("Workout", workout));
+
+        ModalResult modalResult = await modalReference.Result;
+
+        if (modalResult.Confirmed)
+        {
+            try
+            {
+                UpdateWorkoutRequest request = (UpdateWorkoutRequest)modalResult.Data!;
+
+                await WorkoutService.UpdateWorkoutAsync(workout.Id, request);
+
+                await GetWorkoutsAsync();
+
+                ToastService.ShowInfo("Workout updated");
+            }
+            catch (Exception e)
+            {
+                ToastService.ShowError($"Error updating workout - {e.Message}");
+            }
+        }
+    }
+
+    private async Task ShowDeleteModalAsync(Guid workoutId, string workoutDate)
+    {
+        IModalReference modalReference = ModalService.Show<WorkoutDeleteModal>("Delete workout",
+            new ModalParameters().Add("WorkoutDate", workoutDate));
+
+        ModalResult modalResult = await modalReference.Result;
+
+        if (modalResult.Confirmed)
+        {
+            try
+            {
+                await WorkoutService.DeleteWorkoutAsync(workoutId);
+
+                await GetWorkoutsAsync();
+
+                ToastService.ShowInfo("Workout deleted");
+            }
+            catch (Exception e)
+            {
+                ToastService.ShowError($"Error deleting workout - {e.Message}");
+            }
+        }
+    }
+
+}

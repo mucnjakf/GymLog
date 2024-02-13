@@ -1,0 +1,128 @@
+﻿@using GymLog.Web.Exercises.Dtos
+@using GymLog.Web.Exercises.Services
+@using GymLog.Web.Workouts.Requests
+<div class="container">
+    <EditForm Model="@_createWorkoutRequest" OnValidSubmit="@CreateAsync">
+        <DataAnnotationsValidator/>
+
+        <div class="row">
+            <div class="col-12">
+                <label for="duration" class="form-label">Duration:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <InputText @bind-Value="@_createWorkoutRequest.Duration" type="text" class="form-control" id="duration"/>
+                <ValidationMessage For="@(() => _createWorkoutRequest.Duration)"/>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <label for="date" class="form-label">Date:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <InputDate @bind-Value="@_createWorkoutRequest.DateTime" class="form-control" id="date"/>
+                <ValidationMessage For="@(() => _createWorkoutRequest.DateTime)"/>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <label for="sets" class="form-label">Sets:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <InputNumber @bind-Value="@_createWorkoutRequest.Sets" class="form-control" id="sets"/>
+                <ValidationMessage For="@(() => _createWorkoutRequest.Sets)"/>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <label for="reps" class="form-label">Reps:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <InputNumber @bind-Value="@_createWorkoutRequest.Reps" class="form-control" id="reps"/>
+                <ValidationMessage For="@(() => _createWorkoutRequest.Reps)"/>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <label for="exercise" class="form-label">Exercise:</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <InputSelect @bind-Value="@_exerciseId" class="form-select mb-1" id="exercise">
+                    @foreach (ExerciseDto exercise in _exercises)
+                    {
+                        <option value="@exercise.Id">@exercise.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => _createWorkoutRequest.ExerciseId)"/>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="row">
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Confirm</button>
+                <button type="button" class="btn btn-secondary" @onclick="CancelAsync">Cancel</button>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+
+    [Inject] public IExerciseService ExerciseService { get; set; } = default!;
+
+    [Inject] public IToastService ToastService { get; set; } = default!;
+
+    [CascadingParameter] public BlazoredModalInstance BlazoredModalInstance { get; set; } = default!;
+
+    private IEnumerable<ExerciseDto> _exercises = new List<ExerciseDto>();
+
+    private Guid _exerciseId;
+
+    private readonly CreateWorkoutRequest _createWorkoutRequest = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InitExercises();
+    }
+
+    private async Task InitExercises()
+    {
+        try
+        {
+            _exercises = await ExerciseService.GetExercisesAsync();
+            _exerciseId = _exercises.First().Id;
+        }
+        catch (Exception)
+        {
+            ToastService.ShowError("Error loading exercises");
+        }
+    }
+
+    private async Task CreateAsync()
+    {
+        _createWorkoutRequest.ExerciseId = _exerciseId;
+
+        await BlazoredModalInstance.CloseAsync(ModalResult.Ok(_createWorkoutRequest));
+    }
+
+    private async Task CancelAsync()
+    {
+        await BlazoredModalInstance.CancelAsync();
+    }
+
+}

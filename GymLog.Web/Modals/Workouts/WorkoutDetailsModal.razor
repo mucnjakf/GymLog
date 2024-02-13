@@ -1,0 +1,85 @@
+﻿@using GymLog.Web.Workouts.Dtos
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            ID:
+        </div>
+    </div>
+    <div class="row lead fw-bold">
+        <div class="col-12">
+            @Workout.Id
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col-6">
+            Duration:
+        </div>
+        <div class="col-6">
+            Date:
+        </div>
+    </div>
+    <div class="row lead fw-bold">
+        <div class="col-6">
+            @Workout.Duration
+        </div>
+        <div class="col-6">
+            @Workout.DateTime
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row mt-3">
+        <div class="col-6">
+            Sets:
+        </div>
+        <div class="col-6">
+            Reps:
+        </div>
+    </div>
+    <div class="row lead fw-bold">
+        <div class="col-6">
+            @Workout.Sets
+        </div>
+        <div class="col-6">
+            @Workout.Reps
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            Exercise:
+        </div>
+    </div>
+    <div class="row lead fw-bold">
+        <div class="col-12">
+            @Workout.Exercise.Category: @Workout.Exercise.Name
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary" @onclick="CloseAsync">Close</button>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter] public WorkoutDto Workout { get; set; } = default!;
+
+    [CascadingParameter] public BlazoredModalInstance BlazoredModalInstance { get; set; } = default!;
+
+    private async Task CloseAsync()
+    {
+        await BlazoredModalInstance.CloseAsync(ModalResult.Cancel());
+    }
+
+}

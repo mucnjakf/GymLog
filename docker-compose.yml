@@ -1,0 +1,22 @@
+﻿services:
+  gymlog.api:
+    image: gymlog.api
+    container_name: gymlog.api
+    build:
+      context: .
+      dockerfile: GymLog.Api/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+
+  gymlog.database:
+    image: postgres:latest
+    container_name: gymlog.database
+    environment:
+      - POSTGRES_DB=GymLog
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/gymlog-db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432

@@ -1,0 +1,34 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Are sure you want to delete exercise <span class="fw-bold">@ExerciseName</span>?</h5>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="row">
+        <div class="col">
+            <button type="button" class="btn btn-danger" @onclick="DeleteAsync">Confirm</button>
+            <button type="button" class="btn btn-secondary" @onclick="CancelAsync">Cancel</button>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter] public string ExerciseName { get; set; } = default!;
+
+    [CascadingParameter] public BlazoredModalInstance BlazoredModalInstance { get; set; } = default!;
+
+    private async Task DeleteAsync()
+    {
+        await BlazoredModalInstance.CloseAsync(ModalResult.Ok());
+    }
+
+    private async Task CancelAsync()
+    {
+        await BlazoredModalInstance.CancelAsync();
+    }
+
+}

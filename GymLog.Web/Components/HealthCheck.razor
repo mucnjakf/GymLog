@@ -1,0 +1,22 @@
+﻿<button type="button" class="btn btn-outline-dark fs-5" @onclick="CheckHealthAsync">
+    @(_healthCheckResult.Status is "Healthy" ? "🟢" : "🔴") @_healthCheckResult.Status
+</button>
+
+
+@code {
+
+    [Inject] public IHealthCheckService HealthCheckService { get; set; } = default!;
+
+    private HealthCheckDto _healthCheckResult = new("Initializing");
+
+    protected override async Task OnInitializedAsync()
+    {
+        _healthCheckResult = await HealthCheckService.CheckHealthAsync();
+    }
+
+    private async Task CheckHealthAsync()
+    {
+        _healthCheckResult = await HealthCheckService.CheckHealthAsync();
+    }
+
+}

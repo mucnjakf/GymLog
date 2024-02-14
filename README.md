@@ -1,13 +1,6 @@
-﻿<table>
-    <tr>
-        <td valign="center">
-            <img src="./gymlog.png" />
-        </td>
-        <td style="font-size:3em;">
-            GymLog
-        </td>
-    </tr>
-</table>
+﻿![](./gymlog.png)
+
+# GymLog
 
 Personal Exercise & Workout Management Web Application - 2024.
 

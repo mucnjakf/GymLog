@@ -1,9 +1,4 @@
-﻿<div style="display: flex; justify-content: space-between">
-    <div style="font-size: 3em;">GymLog</div>
-    <img src="gymlog.png" />    
-</div>
-
-<!-- ![](./gymlog.png) -->
+﻿# GymLog
 
 Personal Exercise & Workout Management Web Application - 2024.
 

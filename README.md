@@ -1,6 +1,4 @@
-﻿![](./gymlog.png)
-
-# GymLog
+﻿# ![](./gymlog.png) GymLog
 
 Personal Exercise & Workout Management Web Application - 2024.
 

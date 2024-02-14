@@ -5,7 +5,7 @@ Personal Exercise & Workout Management Web Application - 2024.
 
 GymLog is a dedicated application designed to streamline personal exercise routines and workout logs. Tailored for fitness enthusiasts and athletes alike, GymLog provides an intuitive platform for planning, tracking, and analyzing workouts. Users can easily create personalized exercise routines, specifying details such as exercise type, sets, repetitions, and rest intervals.
 
----
+#
 
 ### **⚙️ Tech Stack**
 - Frontend  
@@ -25,7 +25,7 @@ GymLog is a dedicated application designed to streamline personal exercise routi
 - Database
   - PostgreSQL
 
----
+#
 
 ### **🛠️ Tools**
 - Source Control: GitHub

@@ -1,4 +1,4 @@
-﻿# <img src="gymlog.png" width="25"/> GymLog
+﻿# <img src="gymlog.svg" width="25"/> GymLog
 
 ### **👁️ Overview**
 Personal Exercise & Workout Management Web Application - 2024.

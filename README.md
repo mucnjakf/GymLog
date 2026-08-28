@@ -17,7 +17,7 @@ Personal Exercise & Workout Management Web Application - 2024.
   - xUnit
   - Selenium
 - Backend
-  - .NET 8 - ASP.NET Core Web API
+  - .NET 8 - ASP.NET Core Minimal API
   - MediatR
   - Entity Framework Core
   - PostSharp
